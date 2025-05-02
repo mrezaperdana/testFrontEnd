@@ -1,7 +1,3 @@
-// ==== FRONTEND: index.html ====
-<!--
-Save this as index.html, push it to GitHub (e.g., in a repo with GitHub Pages enabled)
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,13 +14,16 @@ Save this as index.html, push it to GitHub (e.g., in a repo with GitHub Pages en
   <div id="hero-list">Loading...</div>
 
   <script>
-    const apiUrl = 'https://b2a2-180-254-193-138.ngrok-free.app/api/heroes'; // Replace with your live Ngrok URL
+    const apiUrl = 'https://b2a2-180-254-193-138.ngrok-free.app/api/heroes'; // Replace with your real Ngrok URL
 
-    fetch(apiUrl)
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-      })
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'ngrok-skip-browser-warning': 'true', // Bypass Ngrok warning page
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
       .then(data => {
         const container = document.getElementById('hero-list');
         container.innerHTML = '';
@@ -40,7 +39,7 @@ Save this as index.html, push it to GitHub (e.g., in a repo with GitHub Pages en
       })
       .catch(err => {
         document.getElementById('hero-list').innerText = 'Failed to load heroes.';
-        console.error('Fetch error:', err);
+        console.error(err);
       });
   </script>
 </body>
