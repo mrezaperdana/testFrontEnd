@@ -29,7 +29,13 @@
 
     // Fetch heroes and display them
     function fetchHeroes() {
-      fetch(apiUrl)
+      fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'ngrok-skip-browser-warning': 'true', // Bypass Ngrok warning page
+        'Content-Type': 'application/json'
+      }
+    })
         .then(res => res.json())
         .then(data => {
           const container = document.getElementById('hero-list');
