@@ -16,11 +16,17 @@
 
   <script>
     const apiUrl = 'https://052b-180-254-193-138.ngrok-free.app/api/heroes';
-    // Replace with your real Ngrok URL
-
+  
+    console.log('Fetching from:', apiUrl); // 👈 debug log
+  
     fetch(apiUrl)
-      .then(res => res.json())
+      .then(res => {
+        console.log('Response status:', res.status); // 👈 log status
+        if (!res.ok) throw new Error('Network response was not OK');
+        return res.json();
+      })
       .then(data => {
+        console.log('Fetched data:', data); // 👈 log data
         const container = document.getElementById('hero-list');
         container.innerHTML = '';
         data.forEach(hero => {
@@ -35,8 +41,9 @@
       })
       .catch(err => {
         document.getElementById('hero-list').innerText = 'Failed to load heroes.';
-        console.error(err);
+        console.error('Fetch error:', err); // 👈 log full error
       });
   </script>
+  
 </body>
 </html>
