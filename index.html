@@ -1,0 +1,41 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hero List</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .hero { margin-bottom: 10px; border: 1px solid #ccc; padding: 10px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Heroes</h1>
+  <div id="hero-list">Loading...</div>
+
+  <script>
+    const apiUrl = ' https://052b-180-254-193-138.ngrok-free.app'; // Replace with your real Ngrok URL
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('hero-list');
+        container.innerHTML = '';
+        data.forEach(hero => {
+          container.innerHTML += `
+            <div class="hero">
+              <strong>${hero.name}</strong><br/>
+              Role: ${hero.role}<br/>
+              Element: ${hero.element}
+            </div>
+          `;
+        });
+      })
+      .catch(err => {
+        document.getElementById('hero-list').innerText = 'Failed to load heroes.';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
