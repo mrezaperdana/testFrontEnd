@@ -1,4 +1,7 @@
-<!-- index.html -->
+// ==== FRONTEND: index.html ====
+<!--
+Save this as index.html, push it to GitHub (e.g., in a repo with GitHub Pages enabled)
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,18 +18,14 @@
   <div id="hero-list">Loading...</div>
 
   <script>
-    const apiUrl = 'https://052b-180-254-193-138.ngrok-free.app/api/heroes';
-  
-    console.log('Fetching from:', apiUrl); // 👈 debug log
-  
+    const apiUrl = 'https://de19-180-254-193-138.ngrok-free.app/api/heroes'; // Replace with your live Ngrok URL
+
     fetch(apiUrl)
       .then(res => {
-        console.log('Response status:', res.status); // 👈 log status
-        if (!res.ok) throw new Error('Network response was not OK');
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         return res.json();
       })
       .then(data => {
-        console.log('Fetched data:', data); // 👈 log data
         const container = document.getElementById('hero-list');
         container.innerHTML = '';
         data.forEach(hero => {
@@ -41,9 +40,8 @@
       })
       .catch(err => {
         document.getElementById('hero-list').innerText = 'Failed to load heroes.';
-        console.error('Fetch error:', err); // 👈 log full error
+        console.error('Fetch error:', err);
       });
   </script>
-  
 </body>
 </html>
