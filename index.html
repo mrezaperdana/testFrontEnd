@@ -1,132 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hero List</title>
+  <meta charset="UTF-8">
+  <title>Equipment Viewer</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .hero { margin-bottom: 10px; border: 1px solid #ccc; padding: 10px; border-radius: 8px; }
-    input, button { margin: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      max-width: 400px;
+    }
+    .card h2 {
+      margin-top: 0;
+    }
+    .card p {
+      margin: 5px 0;
+    }
   </style>
 </head>
 <body>
-  <h1>Heroes</h1>
-
-  <!-- Form for adding or editing a hero -->
-  <div>
-    <h2>Add/Edit Hero</h2>
-    <input type="text" id="name" placeholder="Name" />
-    <input type="text" id="role" placeholder="Role" />
-    <input type="text" id="element" placeholder="Element" />
-    <button onclick="createHero()">Add Hero</button>
-  </div>
-
-  <div id="hero-list">Loading...</div>
+  <h1>Blueprint Viewer</h1>
+  <div id="equipment-container"></div>
 
   <script>
-    const apiUrl = 'https://b2a2-180-254-193-138.ngrok-free.app/api/heroes'; // Your Ngrok URL
-
-    // Fetch heroes and display them
-    function fetchHeroes() {
-      fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'ngrok-skip-browser-warning': 'true', // Bypass Ngrok warning page
-        'Content-Type': 'application/json'
-      }
-    })
-        .then(res => res.json())
-        .then(data => {
-          const container = document.getElementById('hero-list');
-          container.innerHTML = '';
-          data.forEach(hero => {
-            container.innerHTML += `
-              <div class="hero">
-                <strong>${hero.name}</strong><br/>
-                Role: ${hero.role}<br/>
-                Element: ${hero.element}<br/>
-                <button onclick="editHero(${hero.id})">Edit</button>
-                <button onclick="deleteHero(${hero.id})">Delete</button>
-              </div>
-            `;
-          });
-        })
-        .catch(err => {
-          document.getElementById('hero-list').innerText = 'Failed to load heroes.';
-          console.error(err);
-        });
-    }
-
-    // Create a new hero
-    function createHero() {
-      const name = document.getElementById('name').value;
-      const role = document.getElementById('role').value;
-      const element = document.getElementById('element').value;
-
-      const heroData = { name, role, element };
-
-      fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'ngrok-skip-browser-warning': 'true',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(heroData)
-      })
-      .then(res => res.json())
+    // Load and parse the blueprint.json
+    fetch('blueprint.json')
+      .then(response => response.json())
       .then(data => {
-        alert('Hero added successfully!');
-        fetchHeroes(); // Refresh the hero list
+        const container = document.getElementById('equipment-container');
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        card.innerHTML = `
+          <h2>${data["Name"]}</h2>
+          <p><strong>Type:</strong> ${data["Type"]}</p>
+          <p><strong>Tier:</strong> ${data["Tier"]}</p>
+          <p><strong>Value:</strong> ${data["Value"]}</p>
+          <p><strong>Crafting Time:</strong> ${data["Crafting Time (formatted)"]}</p>
+          <p><strong>Merchant XP:</strong> ${data["Merchant XP"]}</p>
+          <p><strong>Required Worker:</strong> ${data["Required Worker"]} (Lv. ${data["Worker Level"]})</p>
+          <p><strong>ATK:</strong> ${data["ATK"]}</p>
+          <p><strong>Ascension Upgrade 1:</strong> ${data["Ascension Upgrade 1"]} (${data["Shards Needed"]} shards)</p>
+        `;
+        
+        container.appendChild(card);
       })
-      .catch(err => console.error('Failed to add hero', err));
-    }
-
-    // Edit an existing hero
-    function editHero(id) {
-      const name = prompt('Enter new name:');
-      const role = prompt('Enter new role:');
-      const element = prompt('Enter new element:');
-
-      const heroData = { name, role, element };
-
-      fetch(`${apiUrl}/${id}`, {
-        method: 'PUT',
-        headers: {
-          'ngrok-skip-browser-warning': 'true',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(heroData)
-      })
-      .then(res => res.json())
-      .then(data => {
-        alert('Hero updated successfully!');
-        fetchHeroes(); // Refresh the hero list
-      })
-      .catch(err => console.error('Failed to update hero', err));
-    }
-
-    // Delete a hero
-    function deleteHero(id) {
-      if (confirm('Are you sure you want to delete this hero?')) {
-        fetch(`${apiUrl}/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'ngrok-skip-browser-warning': 'true',
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(res => res.json())
-        .then(data => {
-          alert('Hero deleted successfully!');
-          fetchHeroes(); // Refresh the hero list
-        })
-        .catch(err => console.error('Failed to delete hero', err));
-      }
-    }
-
-    // Initial fetch to load the list of heroes
-    fetchHeroes();
+      .catch(err => {
+        console.error("Failed to load blueprint.json", err);
+      });
   </script>
 </body>
 </html>
